@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mytutor/views/registerUser.dart';
 
@@ -13,10 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MyTutor',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      // home: const RegisterScreen(),
+      theme: ThemeData(primarySwatch: Colors.purple),
       home: const SplashScreen(),
     );
   }
@@ -31,8 +29,43 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    super.initState();
+    Timer(
+        const Duration(seconds: 4),
+        () => Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (content) => const RegisterScreen())));
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Welcome to',
+              style: TextStyle(fontSize: 28),
+            ),
+            const Text(
+              'MyTutor',
+              style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.purple),
+            ),
+            const SizedBox(height: 10),
+            Image.asset(
+              'assets/images/sleepy-office-worker.png',
+              height: size.height * 0.4,
+            ),
+            // NOTE: Add button here for proceeding to Register
+          ],
+        ),
+      ),
+    );
   }
 }
