@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -232,7 +232,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     //checking the data integrity
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -240,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: const Text("Register new user"),
-          content: const Text("Are your sure?"),
+          content: const Text("Are you sure?"),
           actions: [
             TextButton(
               child: const Text("Ok"),
