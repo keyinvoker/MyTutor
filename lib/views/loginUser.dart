@@ -1,4 +1,7 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:mytutor/components/roundedButton.dart';
+import 'package:mytutor/views/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,10 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          icon: Image.asset(
-            'assets/images/laptop-blue-icon.png',
-          ),
-          onPressed: null,
+          icon: const Icon(Icons.house_rounded),
+          iconSize: 35.0,
+          onPressed: () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (content) => const HomeScreen())),
         ),
         title: const Text(
           'MyTutor',
@@ -105,30 +108,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _usrpasswordEditingController,
                       ),
                     ),
-                    SizedBox(
-                      width: size.width * 0.35,
-                      height: size.height * 0.085,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                            ),
-                          ),
-                          child: const Text(
-                            'LOGIN',
-                            style: TextStyle(
-                              color: Colors.purple,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: null,
-                        ),
-                      ),
+                    RoundedButton(
+                      text: "LOGIN",
+                      buttonColor: Colors.purple,
+                      textColor: Colors.white,
+                      press: () => null,
                     ),
                   ],
                 ),

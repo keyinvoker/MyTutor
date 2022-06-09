@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:mytutor/components/roundedButton.dart';
+import 'package:mytutor/views/home.dart';
 import '../constants.dart';
 import 'dart:convert';
 // ignore: import_of_legacy_library_into_null_safe
@@ -34,10 +37,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          icon: Image.asset(
-            'assets/images/laptop-blue-icon.png',
-          ),
-          onPressed: null,
+          icon: const Icon(Icons.house_rounded),
+          iconSize: 35.0,
+          onPressed: () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (content) => const HomeScreen())),
         ),
         title: const Text(
           'MyTutor',
@@ -164,29 +167,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: size.width * 0.35,
-                height: size.height * 0.085,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OutlinedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'REGISTER',
-                      style: TextStyle(
-                        color: Colors.purple,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: _onRegister,
-                  ),
-                ),
+              RoundedButton(
+                text: "REGISTER",
+                press: _onRegister,
               ),
             ],
           ),

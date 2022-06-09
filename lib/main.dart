@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mytutor/views/registerUser.dart';
-import 'package:mytutor/views/loginUser.dart';
+// import 'package:mytutor/views/registerUser.dart';
+// import 'package:mytutor/views/loginUser.dart';
+import 'package:mytutor/views/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
         const Duration(seconds: 4),
         () => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (content) => const RegisterScreen())));
+            MaterialPageRoute(builder: (content) => const HomeScreen())));
   }
 
   @override
