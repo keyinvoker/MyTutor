@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-// import 'package:mytutor/views/registerUser.dart';
-// import 'package:mytutor/views/loginUser.dart';
 import 'package:mytutor/views/home.dart';
 
 void main() {
@@ -17,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MyTutor',
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }

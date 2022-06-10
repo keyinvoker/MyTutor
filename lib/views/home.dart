@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mytutor/components/roundedButton.dart';
-import 'package:mytutor/views/loginUser.dart';
-import 'package:mytutor/views/registerUser.dart';
+import 'package:mytutor/components/rounded_button.dart';
+import 'package:mytutor/views/login.dart';
+import 'package:mytutor/views/register.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
