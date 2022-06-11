@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:mytutor/models/user.dart';
 import 'package:mytutor/views/main_screen.dart';
 
 import '../constants.dart';
@@ -222,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = (prefs.getString('email')) ?? '';
     String password = (prefs.getString('pass')) ?? '';
-    _isChecked = (prefs.getBool('_isChecked')) ?? false; // 🍎🍎🍎
+    _isChecked = (prefs.getBool('_isChecked')) ?? false;
 
     if (_isChecked) {
       setState(() {
@@ -244,30 +245,27 @@ class _LoginScreenState extends State<LoginScreen> {
           Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/login_user.php"),
           body: {"email": _email, "password": _password}).then((response) {
         var data = jsonDecode(response.body);
-        if (response.statusCode == 200 && data['status'] == 'success') {
-          // Admin admin = Admin.fromJson(data['data']);
-          // String name = data['data']['name'];
-          // String email = data['data']['email'];
-          // String id = data['data']['id'];
-          // String datereg = data['data']['datereg'];
-          // String role = data['data']['role'];
-          // Admin admin = Admin(
-          //     name: name, email: email, id: id, role: role, datereg: datereg);
 
+        if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
-              msg: "Success",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              fontSize: 16.0);
+            msg: "Success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0,
+          );
           pd.update(value: 100, msg: "Completed");
           pd.close();
+
+          var extractdata = data['data'];
+          User user = User.fromJson(extractdata);
+
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (content) => const MainScreen(
-                      // admin: admin,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (content) => MainScreen(user: user),
+            ),
+          );
         } else {
           Fluttertoast.showToast(
             msg: "Failed",

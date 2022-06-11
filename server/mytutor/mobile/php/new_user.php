@@ -1,43 +1,38 @@
 <?php
-if (isset($_POST)) {
+if (!isset($_POST)) {
+    $response = array('status' => 'failed', 'data' => null);
+    sendJsonResponse($response);
+    die();
+}
 
-    include_once("dbconnect.php");
-    session_start();
+include_once("dbconnect.php");
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $password2 = $_POST['password2'];
-    $phone = $_POST['phone'];
-    $name = addslashes($_POST['name']);
-    $address = addslashes($_POST['address']);
-    $image = $_FILES['image']['name'];
-    $base64image = $_POST['image'];
-    $msg;
+$email = addslashes($_POST['email']);
+$password = $_POST['password'];
+$password2 = $_POST['password2'];
+$name = addslashes($_POST['name']);
+$phone = $_POST['phone'];
+$address = addslashes($_POST['address']);
+// $image = $_FILES['image']['name'];
+// $base64image = $_POST['image'];
 
-    if (empty($email) || empty($password) || empty($password2) || empty($phone) || empty($name) || empty($address) || empty($image)) {
-        $msg = 'Fill in all the fields!';
-    } else if (strlen($password) < 8) {
-        $msg = 'Password needs to be 8 characters long!';
-    } else if ($password != $password2) {
-        $msg = 'Password does not match the confirmation!';
-    } else if (is_numeric($phone) < 8) {
-        $msg = 'Please enter a valid mobile phone number!';
-    } else {
+$password = hash('sha256', $password);
+$sqlinsert = "INSERT INTO `users`(`email`, `password`, `name`, `phone`, `address`) VALUES ('$email','$password','$name','$phone', '$address')";
 
-        $password = hash('sha256', $password);
-        $sqlinsert = "INSERT INTO `users`(`email`, `password`, `name`, `phone`, `address`) VALUES ('$email','$password','$name','$phone', '$address')";
+if ($conn->query($sqlinsert) === TRUE) {
+    // $filename = mysqli_insert_id($conn);
+    // $decoded_string = base64_decode($base64image);
+    // $path = '../assets/profiles/' . $filename . '.jpg';
+    // $is_written = file_put_contents($path, $decoded_string);
+    $response = array('status' => 'success', 'data' => null);
+    sendJsonResponse($response);
+} else {
+    $response = array('status' => 'failed', 'data' => null);
+    sendJsonResponse($response);
+}
 
-        if ($conn->query($sqlinsert) === TRUE) {
-            $filename = mysqli_insert_id($conn);
-            $decoded_string = base64_decode($base64image);
-            $path = '../assets/profiles/' . $filename . '.jpg';
-            $is_written = file_put_contents($path, $decoded_string);
-            echo "<script>alert('Successfully logged in!')</script>";
-            header('Location: ../web/login.php');
-        } else {
-            echo "<script>alert('You're a failure')</script>";
-            header('Location: ../web/register.php');
-        }
-    }
-    echo "<script>window.location.replace('../web/register.php?errorMsg=$msg')</script>";
+function sendJsonResponse($sentArray)
+{
+    header('Content-Type: application/json');
+    echo json_encode($sentArray);
 }

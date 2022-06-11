@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mytutor/components/rounded_button.dart';
 import 'package:mytutor/views/login.dart';
 import 'package:mytutor/views/register.dart';
+import 'package:mytutor/views/tutor_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: const Icon(Icons.house_rounded),
           iconSize: 35.0,
           onPressed: () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (content) => const HomeScreen())),
+              MaterialPageRoute(builder: (content) => const TutorScreen())),
         ),
         title: const Text(
           'MyTutor',
