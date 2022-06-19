@@ -10,6 +10,7 @@ import '../models/user.dart';
 import '../models/subject.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 class MainScreen extends StatefulWidget {
   final User user;
@@ -25,7 +26,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   List<Subject> subjectList = <Subject>[];
   String titlecenter = "Fetching...";
-  var color;
+  var _color;
+  String search = "";
   int cart = 0;
   var numofpage, curpage = 1;
   var currentIndex = 0;
@@ -40,9 +42,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget home() {
     Size size = MediaQuery.of(context).size;
     return subjectList.isEmpty
-        ? Center(child: Text("No Subject Available!"))
-        : Container(
-            child: Column(children: [
+        ? const Center(child: Text("No Subject Available!"))
+        : Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Text(titlecenter,
@@ -55,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
                     childAspectRatio: (1 / 1),
                     children: List.generate(subjectList.length, (index) {
                       return InkWell(
-                        splashColor: Colors.amber,
+                        splashColor: Colors.purple,
                         onTap: () => {_loadSubjectDetails(index)},
                         child: Card(
                             child: Column(
@@ -78,7 +79,11 @@ class _MainScreenState extends State<MainScreen> {
                             Text(
                               subjectList[index].subjectname.toString(),
                               style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepPurpleAccent,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Flexible(
                                 flex: 4,
@@ -102,20 +107,19 @@ class _MainScreenState extends State<MainScreen> {
                                                               .subjectrating
                                                               .toString())
                                                       .toStringAsFixed(1)),
-                                              Text(
-                                                subjectList[index]
-                                                        .subjectsessions
-                                                        .toString() +
-                                                    " sessions",
-                                              ),
                                             ],
                                           ),
                                         ),
                                         const Expanded(
-                                            flex: 3,
-                                            child: IconButton(
-                                                onPressed: null,
-                                                icon: Icon(Icons.book))),
+                                          flex: 3,
+                                          child: IconButton(
+                                            onPressed: null,
+                                            icon: Icon(
+                                              Icons.book_outlined,
+                                              color: Colors.deepPurple,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -132,30 +136,30 @@ class _MainScreenState extends State<MainScreen> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   if ((curpage - 1) == index) {
-                    color = Colors.red;
+                    _color = Colors.red;
                   } else {
-                    color = Colors.black;
+                    _color = Colors.black;
                   }
                   return SizedBox(
                     width: 40,
                     child: TextButton(
-                        onPressed: () => {_loadSubjects(index + 1)},
+                        onPressed: () => {_loadSubjects(index + 1, search)},
                         child: Text(
                           (index + 1).toString(),
-                          style: TextStyle(color: color),
+                          style: TextStyle(color: _color),
                         )),
                   );
                 },
               ),
             ),
-          ]));
+          ]);
   }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      _loadSubjects(1);
+      _loadSubjects(1, search);
       screens[0] = home();
       screens[1] = const TutorScreen();
       screens[2] = const Text("Subscribe");
@@ -183,125 +187,19 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            tooltip: "Search",
+            onPressed: () =>
+                {SearchBar(setState: null, buildDefaultAppBar: null)},
+          ),
+        ],
       ),
-      body:
-          // currentIndex == 0
-          //     ? (subjectList.isEmpty
-          //         ? Center(child: Text("No Subject Available!"))
-          //         : Column(children: [
-          //             Padding(
-          //               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-          //               child: Text(titlecenter,
-          //                   style: const TextStyle(
-          //                       fontSize: 18, fontWeight: FontWeight.bold)),
-          //             ),
-          //             Expanded(
-          //                 child: GridView.count(
-          //                     crossAxisCount: 2,
-          //                     childAspectRatio: (1 / 1),
-          //                     children: List.generate(subjectList.length, (index) {
-          //                       return InkWell(
-          //                         splashColor: Colors.amber,
-          //                         onTap: () => {_loadSubjectDetails(index)},
-          //                         child: Card(
-          //                             child: Column(
-          //                           children: [
-          //                             Flexible(
-          //                               flex: 6,
-          //                               child: CachedNetworkImage(
-          //                                 imageUrl: CONSTANTS.server +
-          //                                     "/mytutor/assets/subjects/" +
-          //                                     subjectList[index]
-          //                                         .subjectid
-          //                                         .toString() +
-          //                                     '.jpg',
-          //                                 fit: BoxFit.cover,
-          //                                 width: size.width * 0.6,
-          //                                 placeholder: (context, url) =>
-          //                                     const LinearProgressIndicator(),
-          //                                 errorWidget: (context, url, error) =>
-          //                                     const Icon(Icons.error),
-          //                               ),
-          //                             ),
-          //                             Text(
-          //                               subjectList[index].subjectname.toString(),
-          //                               style: const TextStyle(
-          //                                   fontSize: 20,
-          //                                   fontWeight: FontWeight.bold),
-          //                             ),
-          //                             Flexible(
-          //                                 flex: 4,
-          //                                 child: Column(
-          //                                   children: [
-          //                                     Row(
-          //                                       children: [
-          //                                         Expanded(
-          //                                           flex: 7,
-          //                                           child: Column(
-          //                                             children: [
-          //                                               Text("RM " +
-          //                                                   double.parse(subjectList[
-          //                                                               index]
-          //                                                           .subjectprice
-          //                                                           .toString())
-          //                                                       .toStringAsFixed(
-          //                                                           2)),
-          //                                               Text("Rating: " +
-          //                                                   double.parse(subjectList[
-          //                                                               index]
-          //                                                           .subjectrating
-          //                                                           .toString())
-          //                                                       .toStringAsFixed(
-          //                                                           1)),
-          //                                               Text(
-          //                                                 subjectList[index]
-          //                                                         .subjectsessions
-          //                                                         .toString() +
-          //                                                     " sessions",
-          //                                               ),
-          //                                             ],
-          //                                           ),
-          //                                         ),
-          //                                         const Expanded(
-          //                                             flex: 3,
-          //                                             child: IconButton(
-          //                                                 onPressed: null,
-          //                                                 icon: Icon(Icons.book))),
-          //                                       ],
-          //                                     ),
-          //                                   ],
-          //                                 ))
-          //                           ],
-          //                         )),
-          //                       );
-          //                     }))),
-          //             SizedBox(
-          //               height: 30,
-          //               child: ListView.builder(
-          //                 shrinkWrap: true,
-          //                 itemCount: numofpage,
-          //                 scrollDirection: Axis.horizontal,
-          //                 itemBuilder: (context, index) {
-          //                   if ((curpage - 1) == index) {
-          //                     color = Colors.red;
-          //                   } else {
-          //                     color = Colors.black;
-          //                   }
-          //                   return SizedBox(
-          //                     width: 40,
-          //                     child: TextButton(
-          //                         onPressed: () => {_loadSubjects(index + 1)},
-          //                         child: Text(
-          //                           (index + 1).toString(),
-          //                           style: TextStyle(color: color),
-          //                         )),
-          //                   );
-          //                 },
-          //               ),
-          //             ),
-          //           ]))
-          //     : const Text("FOK"),
-          screens[currentIndex],
+      body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.purple,
         selectedItemColor: Colors.purple,
@@ -310,19 +208,19 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) => setState(() => currentIndex = index),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.book),
             label: 'Subject',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.people),
             label: 'Tutor',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.plus_one_outlined),
             label: 'Subscribe',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.star_border_outlined),
             label: 'Favorite',
           ),
           BottomNavigationBarItem(
@@ -334,7 +232,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void _loadSubjects(int pageno) {
+  void _loadSubjects(int pageno, String search) {
     curpage = pageno;
     numofpage ?? 1;
     ProgressDialog pd = ProgressDialog(context: context);
@@ -368,7 +266,7 @@ class _MainScreenState extends State<MainScreen> {
           extractdata['subjects'].forEach((v) {
             subjectList.add(Subject.fromJson(v));
           });
-          titlecenter = subjectList.length.toString() + " Subjects Available";
+          titlecenter = subjectList.length.toString() + " Subjects Shown";
           setState(() {
             screens[0] = home();
           });
@@ -391,7 +289,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _loadSubjectDetails(int index) {
-    Size size = MediaQuery.of(context).size;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -411,7 +308,6 @@ class _MainScreenState extends State<MainScreen> {
                       subjectList[index].subjectid.toString() +
                       '.jpg',
                   fit: BoxFit.cover,
-                  width: size.width * 0.6,
                   placeholder: (context, url) =>
                       const LinearProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),

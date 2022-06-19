@@ -42,17 +42,20 @@ class _TutorScreenState extends State<TutorScreen> {
               children: [
                 Expanded(
                     child: GridView.count(
-                        crossAxisCount: 2,
+                        crossAxisCount: 1,
                         childAspectRatio: (1 / 1),
                         children: List.generate(TutorList.length, (index) {
                           return InkWell(
                             splashColor: Colors.purple,
                             // onTap: () => {_loadTutorDetails(index)},
+                            onTap: null,
                             child: Card(
                                 child: Column(
                               children: [
-                                Flexible(
-                                  flex: 10,
+                                Padding(
+                                  // flex: 10,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: CachedNetworkImage(
                                     imageUrl: CONSTANTS.server +
                                         "/mytutor/assets/tutors/" +
@@ -69,8 +72,11 @@ class _TutorScreenState extends State<TutorScreen> {
                                 Text(
                                   TutorList[index].tutorname.toString(),
                                   style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurpleAccent,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                                 Flexible(
                                     flex: 5,
@@ -82,20 +88,54 @@ class _TutorScreenState extends State<TutorScreen> {
                                               flex: 8,
                                               child: Column(
                                                 children: [
-                                                  Text(TutorList[index]
-                                                      .tutoremail
-                                                      .toString()),
-                                                  Text(TutorList[index]
-                                                      .tutorphone
-                                                      .toString()),
+                                                  const SizedBox(height: 8),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.mail,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                      Text(
+                                                        TutorList[index]
+                                                            .tutoremail
+                                                            .toString(),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Icon(
+                                                        Icons
+                                                            .phone_android_outlined,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                      Text(
+                                                        TutorList[index]
+                                                            .tutorphone
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
                                             ),
-                                            const Expanded(
-                                                flex: 3,
-                                                child: IconButton(
-                                                    onPressed: null,
-                                                    icon: Icon(Icons.book))),
                                           ],
                                         ),
                                       ],
