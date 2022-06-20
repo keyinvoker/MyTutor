@@ -10,7 +10,6 @@ import '../models/user.dart';
 import '../models/subject.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 class MainScreen extends StatefulWidget {
   final User user;
@@ -27,17 +26,20 @@ class _MainScreenState extends State<MainScreen> {
   List<Subject> subjectList = <Subject>[];
   String titlecenter = "Fetching...";
   var _color;
-  String search = "";
   int cart = 0;
+
   var numofpage, curpage = 1;
   var currentIndex = 0;
   var screens = <dynamic>[
+    const Text("Subjects"),
+    const Text("Tutors"),
     const Text("Subscribe"),
-    const Text("Subscribe"),
-    const Text("Subscribe"),
-    const Text("Subscribe"),
-    const Text("Subscribe")
+    const Text("Favorite"),
+    const Text("Profile"),
   ];
+
+  String search = "";
+  TextEditingController searchController = TextEditingController();
 
   Widget home() {
     Size size = MediaQuery.of(context).size;
@@ -174,12 +176,6 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.people_alt),
-          iconSize: 35.0,
-          onPressed: () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (content) => const TutorScreen())),
-        ),
         title: const Text(
           'MyTutor Subjects',
           style: TextStyle(
@@ -194,8 +190,12 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.white,
             ),
             tooltip: "Search",
-            onPressed: () =>
-                {SearchBar(setState: null, buildDefaultAppBar: null)},
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: MySearchDelegate(),
+              );
+            },
           ),
         ],
       ),
@@ -241,16 +241,14 @@ class _MainScreenState extends State<MainScreen> {
         Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/fetch_subjects.php"),
         body: {
           'pageno': pageno.toString(),
-        }).timeout(
+          'search': search,
+        }).timeout(const Duration(seconds: 5), onTimeout: () {
+      return http.Response(
+          'Error', 408); // Request Timeout response status code
+    }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
-        return http.Response(
-            'Error', 408); // Request Timeout response status code
-      },
-    ).timeout(
-      const Duration(seconds: 5),
-      onTimeout: () {
-        titlecenter = "Timeout! Please retry again later";
+        titlecenter = "Timeout! Please retry again later.";
         return http.Response(
             'Error', 408); // Request Timeout response status code
       },
@@ -295,9 +293,14 @@ class _MainScreenState extends State<MainScreen> {
           return AlertDialog(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            title: const Text(
-              "Subject Details",
-              style: TextStyle(),
+            title: Text(
+              subjectList[index].subjectname.toString(),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurpleAccent,
+              ),
+              textAlign: TextAlign.center,
             ),
             content: SingleChildScrollView(
                 child: Column(
@@ -312,27 +315,86 @@ class _MainScreenState extends State<MainScreen> {
                       const LinearProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                Text(
-                  subjectList[index].subjectname.toString(),
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text("Subject Description: \n" +
-                      subjectList[index].subjectdescription.toString()),
+                  Text("Description: \n" +
+                      subjectList[index].subjectdescription.toString() +
+                      "\n"),
                   Text("Price: RM " +
                       double.parse(subjectList[index].subjectprice.toString())
-                          .toStringAsFixed(2)),
+                          .toStringAsFixed(2) +
+                      "\n"),
                   Text("Rating: " +
                       double.parse(subjectList[index].subjectrating.toString())
-                          .toStringAsFixed(1)),
+                          .toStringAsFixed(1) +
+                      "\n"),
                   Text("Sessions: " +
                       subjectList[index].subjectsessions.toString() +
-                      " sessions"),
+                      " sessions" +
+                      "\n"),
                 ]),
               ],
             )),
           );
         });
+  }
+}
+
+class MySearchDelegate extends SearchDelegate {
+  List<String> searchResults = [
+    'Programming',
+    'Web',
+    'Software',
+  ];
+
+  @override
+  List<Widget>? buildActions(BuildContext context) => [
+        IconButton(
+          onPressed: () {
+            if (query.isEmpty) {
+              close(context, null);
+            } else {
+              query = "";
+            }
+          },
+          icon: const Icon(Icons.clear),
+        ),
+      ];
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () => close(context, null),
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return MainScreen(user: User());
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> suggestions = searchResults.where((searchResult) {
+      final result = searchResult.toLowerCase();
+      final input = query.toLowerCase();
+      return result.contains(input);
+    }).toList();
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final suggestion = suggestions[index];
+
+        return ListTile(
+          title: Text(suggestion),
+          onTap: () {
+            query = suggestion;
+
+            showResults(context);
+          },
+        );
+      },
+    );
   }
 }

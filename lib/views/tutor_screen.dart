@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mytutor/constants.dart';
-import 'package:mytutor/views/home.dart';
-import 'package:mytutor/views/main_screen.dart';
 import '../models/tutor.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +23,6 @@ class _TutorScreenState extends State<TutorScreen> {
   void initState() {
     super.initState();
     loadTutor();
-    print(TutorList);
   }
 
   @override
