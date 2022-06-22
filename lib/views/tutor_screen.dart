@@ -70,6 +70,7 @@ class _TutorScreenState extends State<TutorScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: CachedNetworkImage(
+                                          height: size.height * 0.25,
                                           imageUrl: CONSTANTS.server +
                                               "/mytutor/assets/tutors/" +
                                               tutorList[index]
