@@ -48,13 +48,11 @@ class _TutorScreenState extends State<TutorScreen> {
                           return Container(
                             height: size.height * 0.35,
                             margin: const EdgeInsets.all(16),
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30.0)),
-                            ),
-                            //TODO: UI - change InkWell card bgcolor
                             child: InkWell(
-                              splashColor: Colors.purple,
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              splashColor: Colors.purpleAccent,
                               onTap: () {
                                 int tutorid = int.parse(
                                     tutorList[index].tutorid.toString());
@@ -62,6 +60,10 @@ class _TutorScreenState extends State<TutorScreen> {
                                 _loadTutorDetails(index);
                               },
                               child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  color: Colors.deepPurpleAccent,
                                   elevation: 6,
                                   child: Column(
                                     children: [
@@ -87,7 +89,7 @@ class _TutorScreenState extends State<TutorScreen> {
                                         style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.deepPurple,
+                                          color: Colors.white,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -106,8 +108,7 @@ class _TutorScreenState extends State<TutorScreen> {
                                                       children: [
                                                         const Icon(
                                                           Icons.mail,
-                                                          color:
-                                                              Colors.blueGrey,
+                                                          color: Colors.white70,
                                                         ),
                                                         const SizedBox(
                                                             width: 5),
@@ -119,7 +120,9 @@ class _TutorScreenState extends State<TutorScreen> {
                                                               .ellipsis,
                                                           style:
                                                               const TextStyle(
-                                                            fontSize: 16,
+                                                            fontSize: 18,
+                                                            color:
+                                                                Colors.white70,
                                                           ),
                                                         ),
                                                       ],
@@ -133,8 +136,7 @@ class _TutorScreenState extends State<TutorScreen> {
                                                         const Icon(
                                                           Icons
                                                               .phone_android_outlined,
-                                                          color:
-                                                              Colors.blueGrey,
+                                                          color: Colors.white70,
                                                         ),
                                                         const SizedBox(
                                                             width: 5),
@@ -144,7 +146,9 @@ class _TutorScreenState extends State<TutorScreen> {
                                                               .toString(),
                                                           style:
                                                               const TextStyle(
-                                                            fontSize: 16,
+                                                            fontSize: 18,
+                                                            color:
+                                                                Colors.white70,
                                                           ),
                                                         ),
                                                       ],
@@ -244,16 +248,21 @@ class _TutorScreenState extends State<TutorScreen> {
               ),
               content: SingleChildScrollView(
                 child: Column(children: [
-                  CachedNetworkImage(
-                    imageUrl: CONSTANTS.server +
-                        "/mytutor/assets/tutors/" +
-                        tutorList[index].tutorid.toString() +
-                        '.jpg',
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const LinearProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: CONSTANTS.server +
+                          "/mytutor/assets/tutors/" +
+                          tutorList[index].tutorid.toString() +
+                          '.jpg',
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const LinearProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

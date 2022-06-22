@@ -42,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.house_rounded),
+          icon: const Icon(Icons.arrow_back),
           iconSize: 35.0,
           onPressed: () => Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (content) => const HomeScreen())),

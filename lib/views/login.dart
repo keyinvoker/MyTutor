@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:mytutor/models/user.dart';
 import 'package:mytutor/views/main_screen.dart';
+import 'package:mytutor/views/register.dart';
 
 import '../constants.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.house_rounded),
+          icon: const Icon(Icons.arrow_back),
           iconSize: 35.0,
           onPressed: () => Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (content) => const HomeScreen())),
@@ -146,6 +147,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         buttonColor: Colors.purple,
                         textColor: Colors.white,
                         press: () => _loginUser(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: GestureDetector(
+                          child: const Text(
+                            "No account yet? Register",
+                            textAlign: TextAlign.center,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) =>
+                                        const RegisterScreen()));
+                          },
+                        ),
                       ),
                     ],
                   ),
