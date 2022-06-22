@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MyTutor',
       theme: ThemeData(primarySwatch: Colors.purple),
-      // home: const SplashScreen(),
-      home: MainScreen(user: User()),
+      home: const SplashScreen(),
+      // home: MainScreen(user: User()),
       // home: const LoginScreen(),
     );
   }
