@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mytutor/constants.dart';
-import 'package:mytutor/models/subject.dart';
+import 'package:mytutor/models/tutor_subject.dart';
 import '../models/tutor.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +17,7 @@ class TutorScreen extends StatefulWidget {
 
 class _TutorScreenState extends State<TutorScreen> {
   List<Tutor> tutorList = <Tutor>[];
-  List<Subject> tutorsubjectsList = <Subject>[];
+  List<TutorSubject> tutorsubjectsList = <TutorSubject>[];
 
   var color;
   var _numPages, _currentPage = 1;
@@ -26,7 +26,7 @@ class _TutorScreenState extends State<TutorScreen> {
   @override
   void initState() {
     super.initState();
-    loadTutor();
+    loadTutor(1);
   }
 
   @override
@@ -55,7 +55,12 @@ class _TutorScreenState extends State<TutorScreen> {
                             //TODO: UI - change InkWell card bgcolor
                             child: InkWell(
                               splashColor: Colors.purple,
-                              onTap: () => {_loadTutorDetails(index)},
+                              onTap: () {
+                                int tutorid = int.parse(
+                                    tutorList[index].tutorid.toString());
+                                loadSubjectNames(tutorid);
+                                _loadTutorDetails(index);
+                              },
                               child: Card(
                                   elevation: 6,
                                   child: Column(
@@ -171,7 +176,7 @@ class _TutorScreenState extends State<TutorScreen> {
                       return SizedBox(
                         width: 40,
                         child: TextButton(
-                            onPressed: () => {loadTutor()},
+                            onPressed: () => {loadTutor(index + 1)},
                             child: Text(
                               (index + 1).toString(),
                               style: TextStyle(color: color),
@@ -185,7 +190,8 @@ class _TutorScreenState extends State<TutorScreen> {
     );
   }
 
-  void loadTutor() {
+  void loadTutor(int _pageno) {
+    _currentPage = _pageno;
     _numPages ?? 1;
     http.post(
         Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/fetch_tutors.php"),
@@ -220,73 +226,85 @@ class _TutorScreenState extends State<TutorScreen> {
   }
 
   _loadTutorDetails(int index) {
-    _loadSubjectNames(tutorList[index]);
+    // int i = 0;
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            title: Text(
-              tutorList[index].tutorname.toString(),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              title: Text(
+                tutorList[index].tutorname.toString(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            content: SingleChildScrollView(
-                child: Column(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: CONSTANTS.server +
-                      "/mytutor/assets/tutors/" +
-                      tutorList[index].tutorid.toString() +
-                      '.jpg',
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const LinearProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Description:",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(tutorList[index].tutordescription.toString() + "\n"),
-                    const Text("Email:",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(tutorList[index].tutoremail.toString() + "\n"),
-                    const Text("Phone:",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(tutorList[index].tutorphone.toString() + "\n"),
+              content: SingleChildScrollView(
+                child: Column(children: [
+                  CachedNetworkImage(
+                    imageUrl: CONSTANTS.server +
+                        "/mytutor/assets/tutors/" +
+                        tutorList[index].tutorid.toString() +
+                        '.jpg',
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const LinearProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Description:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(tutorList[index].tutordescription.toString() + "\n"),
+                      const Text("Email:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(tutorList[index].tutoremail.toString() + "\n"),
+                      const Text("Phone:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(tutorList[index].tutorphone.toString() + "\n"),
 
-                    //TODO: loop subjects per tutor
-                    // const Text("Subjects:\n"),
-                    // Text(tutorsubjectsList[index]
-                    //     .subjectname
-                    //     .toString()),
-                  ],
-                ),
-              ],
-            )),
-          );
+                      const Text("Subjects:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
+                      //TODO: loop subjects per tutor
+                      tutorsubjectsList.isEmpty
+                          ? const Text("(None)")
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tutorsubjectsList[0].subjectname.toString(),
+                                ),
+                                Text(
+                                  tutorsubjectsList[1].subjectname.toString(),
+                                ),
+                              ],
+                            )
+                    ],
+                  )
+                ]),
+              ));
         });
   }
 
-  _loadSubjectNames(_tutorid) {
+  loadSubjectNames(int _tutorid) {
     http.post(
         Uri.parse(
             CONSTANTS.server + "/mytutor/mobile/php/fetch_tutorsubjects.php"),
         body: {
-          'tutorid': _tutorid,
+          'tutorid': _tutorid.toString(),
         }).timeout(const Duration(seconds: 5), onTimeout: () {
       return http.Response('Error', 408); // Timeout status code
     }).timeout(
@@ -297,17 +315,13 @@ class _TutorScreenState extends State<TutorScreen> {
       },
     ).then((response) {
       var jsondata = jsonDecode(response.body);
-      print(jsondata);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         var extractdata = jsondata['data'];
-
         if (extractdata['tutorsubjects'] != null) {
-          tutorsubjectsList = <Subject>[];
+          tutorsubjectsList = <TutorSubject>[];
           extractdata['tutorsubjects'].forEach((v) {
-            tutorsubjectsList.add(Subject.fromJson(v));
+            tutorsubjectsList.add(TutorSubject.fromJson(v));
           });
-        } else {
-          tutorsubjectsList.clear();
         }
       }
     });

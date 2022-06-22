@@ -253,7 +253,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _loadSubjects(int _pageno, String _search) {
-    print("_searchController = " + _searchController.text);
     curpage = _pageno;
     numofpage ?? 1;
     _search = _searchController.text;
@@ -273,6 +272,7 @@ class _MainScreenState extends State<MainScreen> {
         return http.Response('Error', 408); // Timeout status code
       },
     ).then((response) {
+      // print("ResponseBody: " + response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         var extractdata = jsondata['data'];
