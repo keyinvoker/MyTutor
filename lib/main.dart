@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mytutor/models/user.dart';
 import 'package:mytutor/views/home.dart';
+import 'package:mytutor/views/login.dart';
 import 'package:mytutor/views/main_screen.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'MyTutor',
       theme: ThemeData(primarySwatch: Colors.purple),
       home: MainScreen(user: User()),
+      // home: const LoginScreen(),
     );
   }
 }
