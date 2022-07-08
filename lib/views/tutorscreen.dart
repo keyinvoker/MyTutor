@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mytutor/constants.dart';
 import 'package:mytutor/models/tutor_subject.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../models/tutor.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,6 +23,8 @@ class _TutorScreenState extends State<TutorScreen> {
   var color;
   var _numPages, _currentPage = 1;
   var titlecenter = "Fetching...";
+
+  var tutorid;
 
   @override
   void initState() {
@@ -54,9 +57,9 @@ class _TutorScreenState extends State<TutorScreen> {
                               ),
                               splashColor: Colors.purpleAccent,
                               onTap: () {
-                                int tutorid = int.parse(
+                                tutorid = int.parse(
                                     tutorList[index].tutorid.toString());
-                                loadSubjectNames(tutorid);
+                                // loadSubjects(tutorid);
                                 _loadTutorDetails(index);
                               },
                               child: Card(
@@ -69,20 +72,25 @@ class _TutorScreenState extends State<TutorScreen> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: CachedNetworkImage(
-                                          height: size.height * 0.25,
-                                          imageUrl: CONSTANTS.server +
-                                              "/mytutor/assets/tutors/" +
-                                              tutorList[index]
-                                                  .tutorid
-                                                  .toString() +
-                                              '.jpg',
-                                          fit: BoxFit.cover,
-                                          width: size.width * 0.5,
-                                          placeholder: (context, url) =>
-                                              const LinearProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10000.0),
+                                          child: CachedNetworkImage(
+                                            height: size.height * 0.25,
+                                            imageUrl: CONSTANTS.server +
+                                                "/mytutor/assets/tutors/" +
+                                                tutorList[index]
+                                                    .tutorid
+                                                    .toString() +
+                                                '.jpg',
+                                            fit: BoxFit.cover,
+                                            width: size.width * 0.5,
+                                            placeholder: (context, url) =>
+                                                const LinearProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
                                         ),
                                       ),
                                       Text(
@@ -230,7 +238,43 @@ class _TutorScreenState extends State<TutorScreen> {
     });
   }
 
-  _loadTutorDetails(int index) {
+  loadSubjects(int _tutorid) {
+    http.post(
+        Uri.parse(
+            CONSTANTS.server + "/mytutor/mobile/php/fetch_tutorsubjects.php"),
+        body: {
+          'tutorid': _tutorid.toString(),
+        }).timeout(const Duration(seconds: 5), onTimeout: () {
+      return http.Response('Error', 408); // Timeout status code
+    }).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        titlecenter = "Timeout! Please retry again later.";
+        return http.Response('Error', 408); // Timeout status code
+      },
+    ).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        var extractdata = jsondata['data'];
+        if (extractdata['tutorsubjects'] != null) {
+          tutorsubjectsList = <TutorSubject>[];
+          extractdata['tutorsubjects'].forEach((v) {
+            tutorsubjectsList.add(TutorSubject.fromJson(v));
+          });
+        } else {
+          tutorsubjectsList.clear();
+        }
+      } else {
+        tutorsubjectsList.clear();
+      }
+    });
+  }
+
+  Future<void> _loadTutorDetails(int index) async {
+    print("index=" + index.toString());
+    print("tutorid=" + tutorid.toString());
+    await loadSubjects(tutorid);
+    print('masuk');
     // int i = 0;
     showDialog(
         context: context,
@@ -307,33 +351,5 @@ class _TutorScreenState extends State<TutorScreen> {
                 ]),
               ));
         });
-  }
-
-  loadSubjectNames(int _tutorid) {
-    http.post(
-        Uri.parse(
-            CONSTANTS.server + "/mytutor/mobile/php/fetch_tutorsubjects.php"),
-        body: {
-          'tutorid': _tutorid.toString(),
-        }).timeout(const Duration(seconds: 5), onTimeout: () {
-      return http.Response('Error', 408); // Timeout status code
-    }).timeout(
-      const Duration(seconds: 5),
-      onTimeout: () {
-        titlecenter = "Timeout! Please retry again later.";
-        return http.Response('Error', 408); // Timeout status code
-      },
-    ).then((response) {
-      var jsondata = jsonDecode(response.body);
-      if (response.statusCode == 200 && jsondata['status'] == 'success') {
-        var extractdata = jsondata['data'];
-        if (extractdata['tutorsubjects'] != null) {
-          tutorsubjectsList = <TutorSubject>[];
-          extractdata['tutorsubjects'].forEach((v) {
-            tutorsubjectsList.add(TutorSubject.fromJson(v));
-          });
-        }
-      }
-    });
   }
 }

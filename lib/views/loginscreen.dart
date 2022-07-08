@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:mytutor/models/user.dart';
-import 'package:mytutor/views/main_screen.dart';
-import 'package:mytutor/views/register.dart';
+import 'package:mytutor/views/mainscreen.dart';
+import 'package:mytutor/views/registerscreen.dart';
 
 import '../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytutor/components/rounded_button.dart';
-import 'package:mytutor/views/home.dart';
+import 'package:mytutor/views/landingscreen.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

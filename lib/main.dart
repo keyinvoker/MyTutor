@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mytutor/models/user.dart';
-import 'package:mytutor/views/login.dart';
-import 'package:mytutor/views/main_screen.dart';
-import 'package:mytutor/views/splash.dart';
+import 'package:mytutor/views/loginscreen.dart';
+import 'package:mytutor/views/mainscreen.dart';
+import 'package:mytutor/views/splashscreen.dart';
 
 void main() {
   runApp(const MyApp());

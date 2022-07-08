@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mytutor/constants.dart';
-import 'package:mytutor/views/tutor_screen.dart';
+import 'package:mytutor/views/profilescreen.dart';
+import 'package:mytutor/views/tutorscreen.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../models/user.dart';
 import '../models/subject.dart';
@@ -36,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     const TutorScreen(),
     const Text("Subscribe"),
     const Text("Favorite"),
-    const Text("Profile"),
+    const ProfileScreen(),
   ];
 
   @override
