@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytutor/constants.dart';
+import 'package:mytutor/views/cartscreen.dart';
 import 'package:mytutor/views/profilescreen.dart';
 import 'package:mytutor/views/tutorscreen.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
@@ -24,11 +28,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   List<Subject> subjectList = <Subject>[];
   String titlecenter = "Fetching...";
+
   var _color;
   var _fontWeight;
   var _fontSize;
-  int cart = 0;
-
   var numofpage, curpage = 1;
   var currentIndex = 0;
 
@@ -37,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
     const TutorScreen(),
     const Text("Subscribe"),
     const Text("Favorite"),
-    const ProfileScreen(),
+    const Text("Profile"),
   ];
 
   @override
@@ -45,11 +48,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
       _loadSubjects(1, search);
-      // screens[0] = subjectsView();
-      // screens[1] = const TutorScreen();
-      // screens[2] = const Text("Subscribe");
-      // screens[3] = const Text("Favorite");
-      // screens[4] = const Text("Profile");
+      screens[4] = ProfileScreen(user: widget.user);
     });
   }
 
@@ -116,14 +115,19 @@ class _MainScreenState extends State<MainScreen> {
                                           const Icon(Icons.error),
                                     ),
                                   ),
-                                  Text(
-                                    subjectList[index].subjectname.toString(),
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.deepPurpleAccent,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6.0,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    child: Text(
+                                      subjectList[index].subjectname.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.deepPurpleAccent,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                   Flexible(
                                       flex: 4,
@@ -152,13 +156,15 @@ class _MainScreenState extends State<MainScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              const Expanded(
+                                              Expanded(
                                                 flex: 3,
                                                 child: IconButton(
-                                                  onPressed: null,
-                                                  icon: Icon(
-                                                    Icons.book_outlined,
-                                                    color: Colors.deepPurple,
+                                                  onPressed: () =>
+                                                      _addToCart(index),
+                                                  icon: const Icon(
+                                                    Icons
+                                                        .add_shopping_cart_rounded,
+                                                    color: Colors.red,
                                                   ),
                                                 ),
                                               ),
@@ -171,6 +177,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                       );
                     }))),
+            // [PAGINATION]
             SizedBox(
               height: 30,
               child: ListView.builder(
@@ -208,17 +215,39 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: const Text(
-          'MyTutor Subjects',
+          'MyTutor',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (content) => MainScreen(user: widget.user))),
+          icon: const Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (content) => CartScreen(user: widget.user)),
+            ),
+            icon: const Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.black38,
+            ),
+          ),
+        ],
       ),
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -265,15 +294,14 @@ class _MainScreenState extends State<MainScreen> {
           'pageno': _pageno.toString(),
           'search': _search,
         }).timeout(const Duration(seconds: 5), onTimeout: () {
-      return http.Response('Error', 408); // Timeout status code
+      return http.Response('Error', 408);
     }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
-        titlecenter = "Timeout! Please retry again later.";
-        return http.Response('Error', 408); // Timeout status code
+        titlecenter = "Timeout! Please retry.";
+        return http.Response('Error', 408);
       },
     ).then((response) {
-      // print("ResponseBody: " + response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         var extractdata = jsondata['data'];
@@ -305,22 +333,22 @@ class _MainScreenState extends State<MainScreen> {
 
   _loadSubjectDetails(int index) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            title: Text(
-              subjectList[index].subjectname.toString(),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurpleAccent,
-              ),
-              textAlign: TextAlign.center,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text(
+            subjectList[index].subjectname.toString(),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurpleAccent,
             ),
-            content: SingleChildScrollView(
-                child: Column(
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
               children: [
                 CachedNetworkImage(
                   imageUrl: CONSTANTS.server +
@@ -332,41 +360,77 @@ class _MainScreenState extends State<MainScreen> {
                       const LinearProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text("Description:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(subjectList[index].subjectdescription.toString() + "\n"),
-                  const Text("Price:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(double.parse(subjectList[index].subjectprice.toString())
-                          .toStringAsFixed(2) +
-                      "\n"),
-                  const Text("Rating:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(double.parse(subjectList[index].subjectrating.toString())
-                          .toStringAsFixed(1) +
-                      "\n"),
-                  const Text("Sessions:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(subjectList[index].subjectsessions.toString() +
-                      " sessions\n"),
-                  const Text("Tutor:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(subjectList[index].subjecttutor.toString()),
-                ]),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Description:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(subjectList[index].subjectdescription.toString() +
+                        "\n"),
+                    const Text("Price:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(
+                        double.parse(subjectList[index].subjectprice.toString())
+                                .toStringAsFixed(2) +
+                            "\n"),
+                    const Text("Rating:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(double.parse(
+                                subjectList[index].subjectrating.toString())
+                            .toStringAsFixed(1) +
+                        "\n"),
+                    const Text("Sessions:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(subjectList[index].subjectsessions.toString() +
+                        " sessions\n"),
+                    const Text("Tutor:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(subjectList[index].subjecttutor.toString()),
+                  ],
+                ),
               ],
-            )),
-          );
-        });
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _addToCart(int index) {
+    http.post(
+        Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/insert_cart.php"),
+        body: {
+          "user_id": widget.user.userid.toString(),
+          "subject_id": subjectList[index].subjectid.toString(),
+          "subject_name": subjectList[index].subjectname.toString(),
+          "subject_price": subjectList[index].subjectprice.toString(),
+        }).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        return http.Response('Error', 408);
+      },
+    ).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        setState(() {});
+        Fluttertoast.showToast(
+          msg: "Added to cart",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0,
+        );
+      }
+    });
   }
 }

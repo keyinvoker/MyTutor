@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: const Icon(Icons.arrow_back),
           iconSize: 35.0,
           onPressed: () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (content) => const HomeScreen())),
+              MaterialPageRoute(builder: (content) => const LandingScreen())),
         ),
         title: const Text(
           'MyTutor',
@@ -61,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: <Widget>[
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center, //?doesn't work
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
                   'assets/images/business-men-illustration.png',
@@ -265,7 +265,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _formKey.currentState!.save();
     }
 
-    //checking the data integrity
     showDialog(
       context: context,
       builder: (BuildContext context) {

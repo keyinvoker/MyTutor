@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mytutor/constants.dart';
 import 'package:mytutor/models/tutor_subject.dart';
-import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../models/tutor.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,6 +20,8 @@ class _TutorScreenState extends State<TutorScreen> {
   List<TutorSubject> tutorsubjectsList = <TutorSubject>[];
 
   var color;
+  var fontWeight;
+  var fontSize;
   var _numPages, _currentPage = 1;
   var titlecenter = "Fetching...";
 
@@ -37,154 +38,136 @@ class _TutorScreenState extends State<TutorScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: tutorList.isEmpty
-          ? Center(
-              child: Text(
-              titlecenter,
-              style: const TextStyle(fontSize: 60),
-            ))
+          ? Center(child: Text(titlecenter))
           : Column(
               children: [
                 Expanded(
-                    child: GridView.count(
-                        crossAxisCount: 1,
-                        children: List.generate(tutorList.length, (index) {
-                          return Container(
-                            height: size.height * 0.35,
-                            margin: const EdgeInsets.all(16),
-                            child: InkWell(
-                              customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(
+                      tutorList.length,
+                      (index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 2,
+                          ),
+                          child: InkWell(
+                            customBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            splashColor: Colors.purpleAccent,
+                            onTap: () {
+                              tutorid = int.parse(
+                                  tutorList[index].tutorid.toString());
+                              _loadTutorDetails(index);
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
-                              splashColor: Colors.purpleAccent,
-                              onTap: () {
-                                tutorid = int.parse(
-                                    tutorList[index].tutorid.toString());
-                                // loadSubjects(tutorid);
-                                _loadTutorDetails(index);
-                              },
-                              child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.deepPurpleAccent,
+                              elevation: 10,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(10000.0),
+                                      child: CachedNetworkImage(
+                                        height: size.height * 0.15,
+                                        imageUrl: CONSTANTS.server +
+                                            "/mytutor/assets/tutors/" +
+                                            tutorList[index]
+                                                .tutorid
+                                                .toString() +
+                                            '.jpg',
+                                        fit: BoxFit.cover,
+                                        width: size.width * 0.5,
+                                        placeholder: (context, url) =>
+                                            const LinearProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    ),
                                   ),
-                                  color: Colors.deepPurpleAccent,
-                                  elevation: 6,
-                                  child: Column(
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Text(
+                                      tutorList[index].tutorname.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10000.0),
-                                          child: CachedNetworkImage(
-                                            height: size.height * 0.25,
-                                            imageUrl: CONSTANTS.server +
-                                                "/mytutor/assets/tutors/" +
-                                                tutorList[index]
-                                                    .tutorid
-                                                    .toString() +
-                                                '.jpg',
-                                            fit: BoxFit.cover,
-                                            width: size.width * 0.5,
-                                            placeholder: (context, url) =>
-                                                const LinearProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        tutorList[index].tutorname.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Column(
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                const SizedBox(height: 6),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.mail,
-                                                          color: Colors.white70,
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 5),
-                                                        Text(
-                                                          tutorList[index]
-                                                              .tutoremail
-                                                              .toString(),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 18,
-                                                            color:
-                                                                Colors.white70,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                    const Icon(
+                                                      Icons.mail_sharp,
+                                                      color: Colors.black54,
+                                                      size: 18,
                                                     ),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons
-                                                              .phone_android_outlined,
-                                                          color: Colors.white70,
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 5),
-                                                        Text(
-                                                          tutorList[index]
-                                                              .tutorphone
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 18,
-                                                            color:
-                                                                Colors.white70,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                    const SizedBox(width: 5),
+                                                    Text(
+                                                      tutorList[index]
+                                                          .tutoremail
+                                                          .toString(),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 12.5,
+                                                        color: Colors.black54,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ],
-                                  )),
+                                  ),
+                                ],
+                              ),
                             ),
-                          );
-                        }))),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                // [PAGINATION]
                 SizedBox(
-                  height: 20,
+                  height: 30,
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: _numPages,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       if ((_currentPage - 1) == index) {
-                        color = Colors.red;
+                        color = Colors.purple;
+                        fontWeight = FontWeight.bold;
+                        fontSize = 17.0;
                       } else {
-                        color = Colors.black;
+                        color = Colors.blueGrey;
+                        fontWeight = null;
+                        fontSize = 12.0;
                       }
                       return SizedBox(
                         width: 40,
@@ -192,7 +175,11 @@ class _TutorScreenState extends State<TutorScreen> {
                             onPressed: () => {loadTutor(index + 1)},
                             child: Text(
                               (index + 1).toString(),
-                              style: TextStyle(color: color),
+                              style: TextStyle(
+                                color: color,
+                                fontWeight: fontWeight,
+                                fontSize: fontSize,
+                              ),
                             )),
                       );
                     },
@@ -213,8 +200,7 @@ class _TutorScreenState extends State<TutorScreen> {
         }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
-        return http.Response(
-            'Error', 408); // Request Timeout response status code
+        return http.Response('Error', 408);
       },
     ).then((response) {
       titlecenter = response.body;
@@ -245,12 +231,12 @@ class _TutorScreenState extends State<TutorScreen> {
         body: {
           'tutorid': _tutorid.toString(),
         }).timeout(const Duration(seconds: 5), onTimeout: () {
-      return http.Response('Error', 408); // Timeout status code
+      return http.Response('Error', 408);
     }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
         titlecenter = "Timeout! Please retry again later.";
-        return http.Response('Error', 408); // Timeout status code
+        return http.Response('Error', 408);
       },
     ).then((response) {
       var jsondata = jsonDecode(response.body);
@@ -271,11 +257,7 @@ class _TutorScreenState extends State<TutorScreen> {
   }
 
   Future<void> _loadTutorDetails(int index) async {
-    print("index=" + index.toString());
-    print("tutorid=" + tutorid.toString());
     await loadSubjects(tutorid);
-    print('masuk');
-    // int i = 0;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -332,7 +314,7 @@ class _TutorScreenState extends State<TutorScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           )),
-                      //TODO: loop subjects per tutor
+                      //TODO: loop subjects per tutor properly
                       tutorsubjectsList.isEmpty
                           ? const Text("(None)")
                           : Column(

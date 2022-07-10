@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mytutor/models/user.dart';
-import 'package:mytutor/views/loginscreen.dart';
-import 'package:mytutor/views/mainscreen.dart';
 import 'package:mytutor/views/splashscreen.dart';
 
 void main() {

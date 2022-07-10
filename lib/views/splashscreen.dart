@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mytutor/models/user.dart';
 import 'package:mytutor/views/landingscreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(
         const Duration(seconds: 2),
         () => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (content) => const HomeScreen())));
+            MaterialPageRoute(builder: (content) => const LandingScreen())));
   }
 
   @override
@@ -60,17 +60,25 @@ class _SplashScreenState extends State<SplashScreen>
               const Text(
                 'MyTutor',
                 style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.purple),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.purple,
+                ),
               ),
               const SizedBox(height: 10),
+              CachedNetworkImage(
+                imageUrl:
+                    'http://mytutor.great-site.net/mytutor/assets/pfps/nanami.jpg',
+                fit: BoxFit.cover,
+                width: size.width * 0.6,
+                placeholder: (context, url) => const LinearProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
               Image.asset(
                 'assets/images/sleepy-office-worker.png',
-                height: size.height * 0.4,
+                width: size.width * 0.55,
               ),
-              // NOTE: Add button here for proceeding to Register
             ],
           ),
         ),

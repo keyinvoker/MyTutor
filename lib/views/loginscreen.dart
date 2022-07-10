@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: const Icon(Icons.arrow_back),
           iconSize: 35.0,
           onPressed: () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (content) => const HomeScreen())),
+              MaterialPageRoute(builder: (content) => const LandingScreen())),
         ),
         title: const Text(
           'MyTutor',
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Stack(children: <Widget>[
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center, //?doesn't work
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
                 'assets/images/business-men-illustration.png',
@@ -257,10 +257,13 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       ProgressDialog pd = ProgressDialog(context: context);
-      pd.show(msg: 'Logging in', max: 100);
+      pd.show(msg: 'Logging in', max: 10);
       http.post(
           Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/login_user.php"),
-          body: {"email": _email, "password": _password}).then((response) {
+          body: {
+            "email": _email,
+            "password": _password,
+          }).then((response) {
         var data = jsonDecode(response.body);
 
         if (response.statusCode == 200 && data['status'] == 'success') {

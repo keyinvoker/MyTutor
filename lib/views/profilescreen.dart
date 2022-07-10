@@ -1,10 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mytutor/models/user.dart';
+import 'package:mytutor/components/rounded_button.dart';
+import 'package:mytutor/views/landingscreen.dart';
 
 import '../constants.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final User user;
+  const ProfileScreen({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -22,15 +29,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Center(
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 6.0),
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
                 height: size.height / 3,
                 width: 390.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.0),
                   color: Colors.deepPurpleAccent,
                   border: Border.all(
-                    color: Colors.purple,
-                    width: 3.5,
+                    color: Colors.white70,
+                    width: 1.5,
                   ),
                 ),
                 child: Column(
@@ -38,9 +45,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const Text(
                       "Student Card",
                       style: TextStyle(
-                        color: Colors.amber,
+                        color: Colors.purpleAccent,
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
                     Row(
@@ -54,7 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: CachedNetworkImage(
                               imageUrl: CONSTANTS.server +
                                   "/mytutor/assets/pfps/" +
-                                  'default.jpg',
+                                  'nanami' +
+                                  '.jpg',
                               height: size.height / 10,
                               fit: BoxFit.fill,
                             ),
@@ -63,21 +72,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start, //to align text
                             children: [
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Name: ",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.white70,
                                     ),
                                   ),
+                                  Text(
+                                    widget.user.username.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
-                                      size: 18,
-                                      color: Colors.white,
+                                      size: 15,
+                                      color: Colors.white70,
                                     ),
                                     onPressed: () {},
                                   ),
@@ -85,17 +99,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Email: ",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.white70,
                                     ),
                                   ),
+                                  Text(
+                                    widget.user.useremail.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
-                                      size: 18,
-                                      color: Colors.white,
+                                      size: 15,
+                                      color: Colors.white70,
                                     ),
                                     onPressed: () {},
                                   ),
@@ -103,17 +121,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Phone: ",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.white70,
                                     ),
                                   ),
+                                  Text(
+                                    widget.user.userphone.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
-                                      size: 18,
-                                      color: Colors.white,
+                                      size: 15,
+                                      color: Colors.white70,
                                     ),
                                     onPressed: () {},
                                   ),
@@ -121,17 +143,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Address: ",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.white70,
                                     ),
                                   ),
+                                  Text(
+                                    widget.user.useraddress.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
-                                      size: 18,
-                                      color: Colors.white,
+                                      size: 15,
+                                      color: Colors.white70,
                                     ),
                                     onPressed: () {},
                                   ),
@@ -145,6 +171,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
+            ),
+            RoundedButton(
+              text: "LOGOUT",
+              buttonColor: Colors.red,
+              textColor: Colors.white,
+              borderColor: Colors.red,
+              press: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => const LandingScreen())),
             ),
           ],
         ),
