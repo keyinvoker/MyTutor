@@ -147,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
                                             ),
                                             IconButton(
                                               onPressed: () =>
-                                                  _deleteFromCart(index),
+                                                  _deleteFromCartDialog(index),
                                               icon: const Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
@@ -258,6 +258,44 @@ class _CartScreenState extends State<CartScreen> {
                               totalPayment: totalPayment,
                             )));
                 _loadCart();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteFromCartDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Delete From Cart",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                _deleteFromCart(index);
               },
             ),
             TextButton(

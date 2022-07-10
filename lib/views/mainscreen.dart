@@ -157,7 +157,7 @@ class _MainScreenState extends State<MainScreen> {
                                                 flex: 3,
                                                 child: IconButton(
                                                   onPressed: () =>
-                                                      _addToCart(index),
+                                                      _addToCartDialog(index),
                                                   icon: const Icon(
                                                     Icons
                                                         .add_shopping_cart_rounded,
@@ -398,6 +398,43 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _addToCartDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Add to Cart",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () async {
+                _addToCart(index);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
