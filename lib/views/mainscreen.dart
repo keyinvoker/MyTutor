@@ -16,10 +16,7 @@ import 'package:mytutor/components/search_bar.dart';
 
 class MainScreen extends StatefulWidget {
   final User user;
-  const MainScreen({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const MainScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();

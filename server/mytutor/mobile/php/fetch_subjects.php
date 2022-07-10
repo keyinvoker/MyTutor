@@ -7,9 +7,9 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
-$results_per_page = 6;
+$limit = 6;
 $pageno = (int)$_POST['pageno'];
-$page_first_result = ($pageno - 1) * $results_per_page;
+$page_first_result = ($pageno - 1) * $limit;
 
 $search = $_POST['search'];
 if (!empty($search)) {
@@ -27,8 +27,8 @@ if (!empty($search)) {
 
 $result = $conn->query($sqlfetchsubjects);
 $number_of_result = $result->num_rows;
-$number_of_page = ceil($number_of_result / $results_per_page);
-$sqlfetchsubjects = $sqlfetchsubjects . " LIMIT $page_first_result , $results_per_page";
+$number_of_page = ceil($number_of_result / $limit);
+$sqlfetchsubjects = $sqlfetchsubjects . " LIMIT $page_first_result , $limit";
 
 $result = $conn->query($sqlfetchsubjects);
 

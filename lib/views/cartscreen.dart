@@ -21,7 +21,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   List<Cart> cartList = <Cart>[];
   String titlecenter = "Fetching...";
-  var totalPayment;
+  double totalPayment = 0.00;
 
   var currentIndex = 0;
 
@@ -255,7 +255,7 @@ class _CartScreenState extends State<CartScreen> {
                     MaterialPageRoute(
                         builder: (content) => PaymentScreen(
                               user: widget.user,
-                              totalPayment: 1000.0,
+                              totalPayment: totalPayment,
                             )));
                 _loadCart();
               },

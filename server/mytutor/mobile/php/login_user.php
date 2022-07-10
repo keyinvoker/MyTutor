@@ -15,11 +15,11 @@ $numrow = $result->num_rows;
 
 if ($numrow > 0) {
     while ($row = $result->fetch_assoc()) {
-        $user['name'] = $row['name'];
-        $user['email'] = $row['email'];
-        $user['phone'] = $row['phone'];
-        $user['address'] = $row['address'];
-        // $_SESSION['image'] = $row['image'];
+        $user['userid'] = $row['id'];
+        $user['username'] = $row['name'];
+        $user['useremail'] = $row['email'];
+        $user['userphone'] = $row['phone'];
+        $user['useraddress'] = $row['address'];
     }
     $response = array('status' => 'success', 'data' => $user);
     sendJsonResponse($response);

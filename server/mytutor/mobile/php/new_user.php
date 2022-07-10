@@ -17,7 +17,10 @@ $address = addslashes($_POST['address']);
 // $base64image = $_POST['image'];
 
 $password = hash('sha256', $password);
-$sqlinsert = "INSERT INTO `users`(`email`, `password`, `name`, `phone`, `address`) VALUES ('$email','$password','$name','$phone', '$address')";
+
+$sqlinsert = "INSERT INTO `users`(`email`, `password`, `name`, `phone`, `address`)
+              VALUES ('$email','$password','$name','$phone', '$address')
+              ";
 
 if ($conn->query($sqlinsert) === TRUE) {
     // $filename = mysqli_insert_id($conn);

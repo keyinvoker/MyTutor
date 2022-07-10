@@ -257,15 +257,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       ProgressDialog pd = ProgressDialog(context: context);
-      pd.show(msg: 'Logging in', max: 10);
+      pd.show(msg: 'Logging in', max: 100);
       http.post(
           Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/login_user.php"),
           body: {
             "email": _email,
             "password": _password,
           }).then((response) {
+        // print(response.body);
         var data = jsonDecode(response.body);
-
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
             msg: "Success",

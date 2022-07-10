@@ -117,12 +117,6 @@ class _TutorScreenState extends State<TutorScreen> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    const Icon(
-                                                      Icons.mail_sharp,
-                                                      color: Colors.black54,
-                                                      size: 18,
-                                                    ),
-                                                    const SizedBox(width: 5),
                                                     Text(
                                                       tutorList[index]
                                                           .tutoremail

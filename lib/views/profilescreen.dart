@@ -141,28 +141,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Address: ",
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                  Text(
-                                    widget.user.useraddress.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      size: 15,
-                                      color: Colors.white70,
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     const Text(
+                              //       "Address: ",
+                              //       style: TextStyle(
+                              //         color: Colors.white70,
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       widget.user.useraddress.toString(),
+                              //       style: const TextStyle(color: Colors.white),
+                              //     ),
+                              //     IconButton(
+                              //       icon: const Icon(
+                              //         Icons.edit,
+                              //         size: 15,
+                              //         color: Colors.white70,
+                              //       ),
+                              //       onPressed: () {},
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),
