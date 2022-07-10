@@ -255,7 +255,7 @@ class _CartScreenState extends State<CartScreen> {
                     MaterialPageRoute(
                         builder: (content) => PaymentScreen(
                               user: widget.user,
-                              totalPayment: totalPayment,
+                              totalPayment: 1000.0,
                             )));
                 _loadCart();
               },

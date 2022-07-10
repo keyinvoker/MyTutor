@@ -67,14 +67,6 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
               const SizedBox(height: 10),
-              CachedNetworkImage(
-                imageUrl:
-                    'http://mytutor.great-site.net/mytutor/assets/pfps/nanami.jpg',
-                fit: BoxFit.cover,
-                width: size.width * 0.6,
-                placeholder: (context, url) => const LinearProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
               Image.asset(
                 'assets/images/sleepy-office-worker.png',
                 width: size.width * 0.55,

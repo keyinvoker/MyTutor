@@ -30,7 +30,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Expanded(
               child: WebView(
                 initialUrl: CONSTANTS.server +
-                    '/slumshop/mobile/php/payment.php?email=' +
+                    '/mytutor/mobile/php/payment.php?email=' +
                     widget.user.useremail.toString() +
                     '&mobile=' +
                     widget.user.userphone.toString() +
